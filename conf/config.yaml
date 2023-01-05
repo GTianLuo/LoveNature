@@ -1,0 +1,12 @@
+mysql:
+  db: mysql
+  dbHost: 101.42.38.110
+  dbPort: 3306
+  dbUser: root
+  dbPassWord: 111111
+  dbName: love_nature
+
+redis:
+  addr: 101.42.38.110:6379
+  password: 111111
+  db: 0
