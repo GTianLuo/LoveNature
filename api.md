@@ -95,30 +95,32 @@
 | email    | string | 邮箱  |
 | password | string | 密码  |
 
+
 **成功：**
 ```json
 {
-  "data": {
-    "email": "2985496686@qq.com",
-    "nickName": "捕蝇草26173ec9001",
-    "sex": 0,
-    "icon": "",
-    "token": "5433e1c4-8cfe-11ed-8f27-38f3ab2900a7"
-  },
-  "code": 200,
-  "msg": "ok",
-  "err": null
+ "data": {
+  "email": "2985496686@qq.com",
+  "nickName": "含羞草9d222589001",
+  "sex": 2,
+  "icon": "http://rnyrwpase.bkt.clouddn.com/default.jpg",
+  "token": "b7615494-8d8d-11ed-947c-38f3ab2900a7"
+ },
+ "code": 200,
+ "msg": "ok",
+ "err": null
 }
 ```
-**失败：**
-```json
-{
-  "data": null,
-  "code": 10005,
-  "msg": "账号或密码不正确",
-  "err": null
-}
-```
+**data 说明：**
+
+| 字段名      | 类型     | 备注                                                                     |
+|----------|--------|------------------------------------------------------------------------|
+| nickName | string | 昵称<br/>注册时会生成一个默认昵称，并且是唯一的                                             |
+| sex      | int    | 性别<br/> 0代表女 <br/>   1代表男 <br/> 2代表未知(默认就是未知)                          |
+| icon     | string | 头像的链接，注册时会生成一个默认头像                                                     |
+| token    | string | 用于身份验证，当用户登录后，以后每次请求都需要将token携带上<br/>当用户连续30天不使用app，token将会过期，用户需要重新登录 |
+
+
 
 
 ## 验证码登录
@@ -134,21 +136,33 @@
 | email | string | 邮箱  |
 | code  | int    | 验证码 |
 
+
 **成功：**
 ```json
 {
-  "data": {
-    "email": "2985496686@qq.com",
-    "nickName": "捕蝇草26173ec9001",
-    "sex": 0,
-    "icon": "",
-    "token": "25bdf4e0-8cff-11ed-af28-38f3ab2900a7"
-  },
-  "code": 200,
-  "msg": "ok",
+ "data": {
+  "email": "2985496686@qq.com",
+  "nickName": "含羞草9d222589001",
+  "sex": 2,
+  "icon": "http://rnyrwpase.bkt.clouddn.com/default.jpg",
+  "token": "b7615494-8d8d-11ed-947c-38f3ab2900a7"
+ },
+ "code": 200,
+ "msg": "ok",
+ "err": null
+}
+```
+**失败：**
+```json
+{
+  "data": null,
+  "code": 10005,
+  "msg": "账号或密码不正确",
   "err": null
 }
 ```
+
+
 **失败：**
 ```json
 {
