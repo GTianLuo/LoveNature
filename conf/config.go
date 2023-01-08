@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+var C Config
+
 type Config struct {
 	Mysql struct {
 		DB         string `yaml:"db"`
@@ -22,6 +24,13 @@ type Config struct {
 		Password string `yaml:"password"`
 		DB       int    `yaml:"db"`
 	}
+
+	QiNiu struct {
+		AccessKey   string `yaml:"accessKey"`
+		SecretKey   string `yaml:"secretKey"`
+		Bucket      string `yaml:"bucket"`
+		QiNiuServer string `yaml:"qiNiuServer"`
+	}
 }
 
 func init() {
@@ -31,18 +40,17 @@ func init() {
 		return
 	}
 
-	var c Config
-	err = yaml.Unmarshal(config, &c)
+	err = yaml.Unmarshal(config, &C)
 	if err != nil {
 		log.Error("反序列化文件失败", err)
 		return
 	}
 
 	//配置mysql
-	readPath := strings.Join([]string{c.Mysql.DBUser, ":", c.Mysql.DBPassWord, "@tcp(", c.Mysql.DBHost, ":", c.Mysql.DBPort, ")/", c.Mysql.DBName, "?charset=utf8&parseTime=true"}, "")
-	writePath := strings.Join([]string{c.Mysql.DBUser, ":", c.Mysql.DBPassWord, "@tcp(", c.Mysql.DBHost, ":", c.Mysql.DBPort, ")/", c.Mysql.DBName, "?charset=utf8&parseTime=true"}, "")
+	readPath := strings.Join([]string{C.Mysql.DBUser, ":", C.Mysql.DBPassWord, "@tcp(", C.Mysql.DBHost, ":", C.Mysql.DBPort, ")/", C.Mysql.DBName, "?charset=utf8&parseTime=true"}, "")
+	writePath := strings.Join([]string{C.Mysql.DBUser, ":", C.Mysql.DBPassWord, "@tcp(", C.Mysql.DBHost, ":", C.Mysql.DBPort, ")/", C.Mysql.DBName, "?charset=utf8&parseTime=true"}, "")
 	Database(readPath, writePath)
 
 	//配置Redis
-	Cache(c.Redis.Addr, c.Redis.Password, c.Redis.DB)
+	Cache(C.Redis.Addr, C.Redis.Password, C.Redis.DB)
 }

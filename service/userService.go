@@ -160,3 +160,45 @@ func (s *UserService) UpdatePassword(ctx *gin.Context) *dto.Result {
 	}
 	return dto.Success(e.Success, "修改成功,请重新登录")
 }
+
+func (s *UserService) UploadIcon(ctx *gin.Context) *dto.Result {
+	userDao := dao.NewUserDao(ctx)
+	redisClient := conf.NewRedisClient()
+	iconFile, header, err := ctx.Request.FormFile("iconFile")
+	if err != nil {
+		return dto.Fail(e.InvalidParam, err)
+	}
+	//校验文件
+	if header.Size > (8 << 21) {
+		return dto.Fail(e.IconTooBig, nil)
+	}
+	if typ := header.Header.Get("Content-Type"); typ != "image/png" &&
+		typ != "image/gif" &&
+		typ != "image/jpeg" &&
+		typ != "image/jpg" &&
+		typ != "image/bmp" {
+		return dto.Fail(e.WrongPictureFormat, nil)
+	}
+	//若原先头像不是默认头像的话删除头像
+	userI, _ := ctx.Get("user")
+	if icon := userI.(*dto.UserDto).Icon; icon != "http://rnyrwpase.bkt.clouddn.com/default.jpg" {
+		if err := util.DelImg(icon); err != nil {
+			return dto.Fail(e.Error, err)
+		}
+	}
+	//上传图片
+	url, err := util.UploadImg(iconFile, header.Size)
+	if err != nil {
+		return dto.Fail(e.Error, err)
+	}
+	//修改数据库
+	if err = userDao.UploadIcon(s.NickName, url); err != nil {
+		dto.Fail(e.Error, nil)
+	}
+	//修改缓存
+	if err = redisClient.HSet(e.UserLoginInfo+s.NickName, "Icon", url).Err(); err != nil {
+		dto.Fail(e.Error, nil)
+	}
+	//ctx
+	return dto.Success(e.Success, url)
+}

@@ -10,3 +10,9 @@ redis:
   addr: 101.42.38.110:6379
   password: 111111
   db: 0
+
+qiniu:
+  accessKey: pUMAM6_IIbXvubZnobQOUo876hc8ezuCrM8md5ML
+  secretKey: dQKMJAtWHjPO22WbFQEjzh8ifrslnY2DNMblLjfK
+  bucket: love--nature
+  qiNiuServer: http://rnyrwpase.bkt.clouddn.com/

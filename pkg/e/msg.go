@@ -15,6 +15,8 @@ func init() {
 	msg[WrongAccountOrPassword] = "账号或密码不正确"
 	msg[WrongPasswordFormat] = "密码格式不正确"
 	msg[UserNotLogin] = "用户未登录"
+	msg[IconTooBig] = "只允许2MB以下的图片作为头像"
+	msg[WrongPictureFormat] = "不支持该格式的图片"
 }
 
 func GetMsg(code int) string {

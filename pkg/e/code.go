@@ -12,4 +12,6 @@ const (
 	WrongPasswordFormat    = 10005
 	WrongAccountOrPassword = 10006
 	UserNotLogin           = 10007
+	IconTooBig             = 10008
+	WrongPictureFormat     = 10009
 )

@@ -8,7 +8,6 @@ import (
 
 func NewRouter() *gin.Engine {
 	r := gin.Default()
-
 	//v1
 	v1Group := r.Group("api/v1", middleware.RefreshToken())
 	{
@@ -21,7 +20,8 @@ func NewRouter() *gin.Engine {
 
 			userGroup.POST("/logout", middleware.CheckLoginStatus(), v1.Logout)
 			userGroup.PATCH("/password", middleware.CheckLoginStatus(), v1.UpdatePassword)
-			userGroup.GET("/me")
+			//userGroup.GET("/me")
+			userGroup.POST("/icon", middleware.CheckLoginStatus(), v1.UploadIcon)
 		}
 	}
 	return r

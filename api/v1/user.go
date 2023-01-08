@@ -60,3 +60,12 @@ func Logout(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, dto.Fail(http.StatusBadRequest, err))
 	}
 }
+
+func UploadIcon(ctx *gin.Context) {
+	userService := service.NewUserService()
+	if err := ctx.ShouldBind(userService); err == nil {
+		ctx.JSON(http.StatusOK, userService.UploadIcon(ctx))
+	} else {
+		ctx.JSON(http.StatusBadRequest, dto.Fail(http.StatusBadRequest, err))
+	}
+}

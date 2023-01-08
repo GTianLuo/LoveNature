@@ -39,4 +39,6 @@ func (dao *UserDao) UpdatePassword(nickName string, password string) error {
 	return dao.DB.Model(&model.User{}).Where("nick_name = ?", nickName).Update("password", password).Error
 }
 
-//38aa1a0e097992e5445564eccd8dd24f
+func (dao *UserDao) UploadIcon(nickName string, url string) error {
+	return dao.DB.Model(&model.User{}).Where("nick_name = ?", nickName).Update("icon", url).Error
+}

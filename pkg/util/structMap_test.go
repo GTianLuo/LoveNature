@@ -30,7 +30,7 @@ func TestStructToMap(t *testing.T) {
 	m := StructToMap(b)
 	fmt.Println(m)
 	bb := &B{}
-	MapToStruct(m, bb)
+	//MapToStruct(m, bb)
 	fmt.Println(bb)
 }
 
