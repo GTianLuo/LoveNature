@@ -17,6 +17,7 @@ type UserService struct {
 	NickName string `form:"nickName"`
 	Icon     string `form:"icon"`
 	Code     string `form:"code"`
+	Token    string `form:"token"`
 }
 
 func NewUserService() *UserService {
@@ -43,7 +44,7 @@ func (s *UserService) SendCode() *dto.Result {
 	//获取随机验证码并发送
 	vCode := util.RandomCode(6)
 	redisClient.Set(e.VerificationCodeKey+s.Email, vCode, e.VerificationCodeKeyTTL)
-	util.SendCode(vCode)
+	util.SendCode(vCode, s.Email)
 	return dto.Success(code, "发送成功")
 }
 
@@ -54,7 +55,7 @@ func (s *UserService) Register(ctx context.Context) *dto.Result {
 
 	//检验密码格式
 	if isTrue := util.VerifyPasswordFormat(s.Password); !isTrue {
-		return dto.Fail(e.WrongAccountOrPassword, nil)
+		return dto.Fail(e.WrongPasswordFormat, nil)
 	}
 
 	//验证码校验
@@ -96,10 +97,12 @@ func (s *UserService) LoginByPassword(ctx *gin.Context) *dto.Result {
 	}
 	//生成token
 	token := util.NextToken()
-	//将token保存到redis
-	redisClient.Set(e.UserLoginToken+s.Email, token, e.USerLoginTokenTTL)
-	//返回用户信息
+	//利用token将用户的基本信息保存到redis中
 	userDto := dto.BuildUser(user, token)
+	redisClient.Del(e.UserLoginInfo + user.NickName) //防止用户重复登录导致生成多个token
+	redisClient.HMSet(e.UserLoginInfo+user.NickName, util.StructToMap(userDto))
+	redisClient.Expire(e.UserLoginInfo+user.NickName, e.UserLoginInfoTTL)
+	//返回用户信息
 	return dto.Success(e.Success, userDto)
 }
 
@@ -121,9 +124,39 @@ func (s *UserService) LoginByCode(ctx *gin.Context) *dto.Result {
 	//生成token
 	token := util.NextToken()
 	//将token保存到redis
-	redisClient.Set(e.UserLoginToken+s.Email, token, e.USerLoginTokenTTL)
-	//返回用户信息
 	userDto := dto.BuildUser(user, token)
+	redisClient.Del(e.UserLoginInfo + user.NickName) //防止用户重复登录导致生成多个token
+	redisClient.HMSet(e.UserLoginInfo+user.NickName, util.StructToMap(userDto))
+	redisClient.Expire(e.UserLoginInfo+user.NickName, e.UserLoginInfoTTL)
+	//返回用户信息
 	return dto.Success(e.Success, userDto)
 
+}
+
+func (s *UserService) Logout(ctx *gin.Context) *dto.Result {
+	redisClient := conf.NewRedisClient()
+	//删除redis中的登录状态
+	redisClient.Del(e.UserLoginInfo + s.NickName)
+	return dto.Success(e.Success, "退出成功")
+}
+
+func (s *UserService) UpdatePassword(ctx *gin.Context) *dto.Result {
+	userDao := dao.NewUserDao(ctx)
+	redisClient := conf.NewRedisClient()
+
+	//校验验证码
+	redisClient.Get(e.VerificationCodeKey + s.Email)
+	//检查密码格式
+	if isTrue := util.VerifyPasswordFormat(s.Password); !isTrue {
+		return dto.Fail(e.WrongPasswordFormat, nil)
+	}
+	//修改密码
+	if err := userDao.UpdatePassword(s.NickName, util.Encryption(s.Password)); err != nil {
+		return dto.Fail(e.Error, err)
+	}
+	//删除当前用户的登录状态
+	if err := redisClient.Del(e.UserLoginInfo + s.NickName).Err(); err != nil {
+		return dto.Fail(e.Error, err)
+	}
+	return dto.Success(e.Success, "修改成功,请重新登录")
 }

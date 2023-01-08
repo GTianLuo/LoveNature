@@ -4,8 +4,8 @@ import "time"
 
 const (
 	VerificationCodeKey    = "lovenature:user:code:"
-	VerificationCodeKeyTTL = time.Second * 60
+	VerificationCodeKeyTTL = time.Second * 60 * 3
 
-	UserLoginToken    = "lovenature:user:token:"
-	USerLoginTokenTTL = time.Hour * 24 * 30
+	UserLoginInfo    = "lovenature:user:token:"
+	UserLoginInfoTTL = time.Hour * 24 * 30
 )

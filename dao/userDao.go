@@ -34,3 +34,9 @@ func (dao *UserDao) GetUser(email string) *model.User {
 	dao.DB.Where("email = ?", email).Find(u)
 	return u
 }
+
+func (dao *UserDao) UpdatePassword(nickName string, password string) error {
+	return dao.DB.Model(&model.User{}).Where("nick_name = ?", nickName).Update("password", password).Error
+}
+
+//38aa1a0e097992e5445564eccd8dd24f

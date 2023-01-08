@@ -6,7 +6,7 @@ import (
 )
 
 func TestSendCode(t *testing.T) {
-	SendCode("123456")
+	SendCode("123456", "2985496686@qq.com")
 }
 
 func TestVerifyEmailFormat(t *testing.T) {

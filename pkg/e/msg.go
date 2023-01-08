@@ -13,6 +13,8 @@ func init() {
 	msg[WrongCode] = "验证码错误"
 	msg[RepeatRegister] = "该邮箱已经注册"
 	msg[WrongAccountOrPassword] = "账号或密码不正确"
+	msg[WrongPasswordFormat] = "密码格式不正确"
+	msg[UserNotLogin] = "用户未登录"
 }
 
 func GetMsg(code int) string {

@@ -9,5 +9,7 @@ const (
 	RepeatSending          = 10002
 	WrongCode              = 10003
 	RepeatRegister         = 10004
-	WrongAccountOrPassword = 10005
+	WrongPasswordFormat    = 10005
+	WrongAccountOrPassword = 10006
+	UserNotLogin           = 10007
 )
