@@ -14,4 +14,8 @@ const (
 	UserNotLogin           = 10007
 	IconTooBig             = 10008
 	WrongPictureFormat     = 10009
+
+	NilAddress            = 20001
+	InvalidSex            = 20002
+	IntroductionIsTooLong = 20003
 )

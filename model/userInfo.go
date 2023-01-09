@@ -5,11 +5,12 @@ import "gorm.io/gorm"
 type UserInfo struct {
 	gorm.Model
 	UserID        uint `gorm:"not null"`
-	City          string
+	Address       string
+	Sex           int `gorm:"default:2"`
 	Introduction  string
 	Followee      uint
-	Interested    string
 	Fans          uint
+	Interested    string
 	NotesNumber   uint
 	CollectNumber uint
 }

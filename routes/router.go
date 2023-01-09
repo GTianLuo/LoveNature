@@ -23,6 +23,14 @@ func NewRouter() *gin.Engine {
 			//userGroup.GET("/me")
 			userGroup.POST("/icon", middleware.CheckLoginStatus(), v1.UploadIcon)
 		}
+
+		userInfoGroup := v1Group.Group("/userInfo", middleware.CheckLoginStatus())
+		{
+			userInfoGroup.GET("/me", v1.GetMeInfo)
+			userInfoGroup.PATCH("/edit/sex", v1.UpdateSex)
+			userInfoGroup.PATCH("/edit/address", v1.UpdateAddress)
+			userInfoGroup.PATCH("/edit/introduction", v1.UpdateIntroduction)
+		}
 	}
 	return r
 }

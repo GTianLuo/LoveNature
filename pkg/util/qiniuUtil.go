@@ -1,6 +1,5 @@
 package util
 
-import "C"
 import (
 	"context"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"

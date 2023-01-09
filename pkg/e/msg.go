@@ -17,6 +17,10 @@ func init() {
 	msg[UserNotLogin] = "用户未登录"
 	msg[IconTooBig] = "只允许2MB以下的图片作为头像"
 	msg[WrongPictureFormat] = "不支持该格式的图片"
+
+	msg[NilAddress] = "地址不能为空"
+	msg[InvalidSex] = "非法的性别信息"
+	msg[IntroductionIsTooLong] = "个性签名太长"
 }
 
 func GetMsg(code int) string {
