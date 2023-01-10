@@ -60,7 +60,7 @@ func (s *UserService) Register(ctx context.Context) *dto.Result {
 
 	//验证码校验
 	vCode := redisClient.Get(e.VerificationCodeKey + s.Email).Val()
-	if vCode != s.Code {
+	if vCode != s.Code || vCode == "" {
 		return dto.Fail(e.WrongCode, nil)
 	}
 
@@ -116,7 +116,7 @@ func (s *UserService) LoginByCode(ctx *gin.Context) *dto.Result {
 		//邮箱未注册
 		return dto.Fail(e.WrongAccountOrPassword, nil)
 	}
-	if vCode := redisClient.Get(e.VerificationCodeKey + s.Email).Val(); vCode != s.Code {
+	if vCode := redisClient.Get(e.VerificationCodeKey + s.Email).Val(); vCode != s.Code || vCode == "" {
 		//验证码错误
 		return dto.Fail(e.WrongCode, nil)
 	}
@@ -143,12 +143,13 @@ func (s *UserService) Logout(ctx *gin.Context) *dto.Result {
 func (s *UserService) UpdatePassword(ctx *gin.Context) *dto.Result {
 	userDao := dao.NewUserDao(ctx)
 	redisClient := conf.NewRedisClient()
-
-	//校验验证码
-	redisClient.Get(e.VerificationCodeKey + s.Email)
 	//检查密码格式
 	if isTrue := util.VerifyPasswordFormat(s.Password); !isTrue {
 		return dto.Fail(e.WrongPasswordFormat, nil)
+	}
+	//校验验证码
+	if code := redisClient.Get(e.VerificationCodeKey + s.Email).Val(); code != s.Code || code == "" {
+		return dto.Fail(e.WrongCode, nil)
 	}
 	//修改密码
 	if err := userDao.UpdatePassword(s.NickName, util.Encryption(s.Password)); err != nil {
@@ -169,7 +170,7 @@ func (s *UserService) UploadIcon(ctx *gin.Context) *dto.Result {
 		return dto.Fail(e.InvalidParam, err)
 	}
 	//校验文件
-	if header.Size > (8 << 21) {
+	if header.Size > (8 << 18) {
 		return dto.Fail(e.IconTooBig, nil)
 	}
 	if typ := header.Header.Get("Content-Type"); typ != "image/png" &&

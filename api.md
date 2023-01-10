@@ -1,3 +1,4 @@
+[TOC]
 
 ## 返回值说明
 返回值为一个json字符串,有四部分：
@@ -102,7 +103,6 @@
  "data": {
   "email": "2985496686@qq.com",
   "nickName": "含羞草9d222589001",
-  "sex": 2,
   "icon": "http://rnyrwpase.bkt.clouddn.com/default.jpg",
   "token": "b7615494-8d8d-11ed-947c-38f3ab2900a7"
  },
@@ -116,7 +116,6 @@
 | 字段名      | 类型     | 备注                                                                     |
 |----------|--------|------------------------------------------------------------------------|
 | nickName | string | 昵称<br/>注册时会生成一个默认昵称，并且是唯一的                                             |
-| sex      | int    | 性别<br/> 0代表女 <br/>   1代表男 <br/> 2代表未知(默认就是未知)                          |
 | icon     | string | 头像的链接，注册时会生成一个默认头像                                                     |
 | token    | string | 用于身份验证，当用户登录后，以后每次请求都需要将token携带上<br/>当用户连续30天不使用app，token将会过期，用户需要重新登录 |
 
@@ -143,7 +142,6 @@
  "data": {
   "email": "2985496686@qq.com",
   "nickName": "含羞草9d222589001",
-  "sex": 2,
   "icon": "http://rnyrwpase.bkt.clouddn.com/default.jpg",
   "token": "b7615494-8d8d-11ed-947c-38f3ab2900a7"
  },
@@ -173,21 +171,203 @@
 }
 ```
 
-# 签到模块
+## 修改密码
+
+**接口：** ``user/password``
+
+**请求方式：** ``PATCH``
+
+**请求参数：**
+
+| 参数名      | 类型     | 备注  |
+|----------|--------|-----|
+| nickName | string | 昵称  |
+| email    | string | 邮箱  |
+| password | int    | 新密码 |
+
+
+**成功：**
+```json
+{
+ "data": "修改成功,请重新登录",
+ "code": 200,
+ "msg": "ok",
+ "err": null
+}
+```
+
+**失败：** token错误
+```json
+{
+ "data": null,
+ "code": 10007,
+ "msg": "用户未登录",
+ "err": null
+}
+```
+
+
+**失败：** 验证码错误
+```json
+{
+  "data": null,
+  "code": 10003,
+  "msg": "验证码错误",
+  "err": null
+}
+```
+
+
+## 退出账号
+
+**接口：** ``user/logout``
+
+**请求方式：** ``POST``
+
+**请求参数：**
+
+| 参数名      | 类型     | 备注   |
+|----------|--------|------|
+| nickName | string | 昵称   |
+| token    | string | 身份验证 |
 
 
 
+**成功：**
+```json
+{
+ "data": "退出成功",
+ "code": 200,
+ "msg": "ok",
+ "err": null
+}
+```
+
+**失败：** 同上
+
+
+## 上传头像
+
+
+**接口：** ``user/icon``
+
+**请求方式：** ``POST``
+
+**请求参数：**
+
+| 参数名      | 类型     | 备注                                                             |
+|----------|--------|----------------------------------------------------------------|
+| nickName | string | 昵称                                                             |
+| token    | string | 身份验证                                                           |
+| iconFile | File   | 图片文件 <br/>1. 仅支持png、gif、jpeg、jpg、bmp类型的图片文件 <br/>2.图片大小必须小于2MB |
 
 
 
+**成功：返回图片链接**
+```json
+{
+ "data": "http://rnyrwpase.bkt.clouddn.com/FsWaUHXkJ9iJRfrTzLcr5I6YVnsD",
+ "code": 200,
+ "msg": "ok",
+ "err": null
+}
+```
+
+**失败：**
+```json
+{
+    "data": null,
+    "code": 10009,
+    "msg": "不支持该格式的图片",
+    "err": null
+}
+```
+```json
+{
+    "data": null,
+    "code": 10008,
+    "msg": "只允许2MB以下的图片作为头像",
+    "err": null
+}
+```
+**其余错误同上，以下凡是需要token验证的均存在此错误，不在赘述**
+
+# 编辑个人信息模块
+
+## 获取自己信息
+
+**接口：** ``userInfo/me``
+
+**请求方式：** ``GET``
+
+**请求参数：**
+
+| 参数名      | 类型     | 备注   |
+|----------|--------|------|
+| nickName | string | 昵称   |
+| token    | string | 身份验证 |
+
+
+**成功：**
+```json
+{
+ "data": {
+  "email": "2985496686@qq.com", 
+  "nickName": "独角仙2b4f02829001",
+  "icon": "http://rnyrwpase.bkt.clouddn.com/Fp3LECPJ6OKTjOLS3-_-jVnGgohc",
+  "address": "",
+  "introduction": "",
+  "sex": 1,
+  "followee": 0,
+  "fans": 0,
+  "notesNumber": 0,
+  "notes": 0
+ },
+ "code": 200,
+ "msg": "ok",
+ "err": null
+}
+```
+
+**data说明**
+
+| 字段名            | 类型     | 备注                         |
+|----------------|--------|----------------------------|
+| email          | string | 邮箱                         |
+| icon           | string | 头像的链接                      |
+| address        | string | 地址                         |
+| introduction   | string | 个人简介                       |
+| sex            | int    | 性别 <br/>默认为2表示未知，0表示男，1表示女 |
+| followee       | int    | 关注数                        |
+| fans           | int    | 粉丝数                        |
+| notesNumber    | int    | 发布的笔记数                     |
+| getLikesNumber | int    | 获得的点赞数                     |
 
 
 
+## 编辑个人信息
 
+**接口：**  ``userInfo/edit/sex`` 、``userInfo/edit/address``、``userInfo/edit/introduction``
 
+**请求方式：** ``PATCH``
 
+**请求参数：**
 
+| 参数名                      | 类型     | 备注       |
+|--------------------------|--------|----------|
+| nickName                 | string | 昵称       |
+| token                    | string | 身份验证     |
+| sex/address/introduction | string | 要编辑的个人信息 |
 
+**成功：**
+```json
+{
+    "data": "修改成功",
+    "code": 200,
+    "msg": "ok",
+    "err": null
+}
+```
 
 
 
