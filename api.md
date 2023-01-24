@@ -296,7 +296,7 @@
 
 ## 获取自己信息
 
-**接口：** ``userInfo/me:/nickName``
+**接口：** ``userInfo/me/:nickName``
 
 **请求方式：** ``GET``
 
