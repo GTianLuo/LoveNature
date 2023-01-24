@@ -52,3 +52,15 @@ func (dao *UserDao) UpdatePassword(nickName string, password string) error {
 func (dao *UserDao) UploadIcon(nickName string, url string) error {
 	return dao.db.Model(&model.User{}).Where("nick_name = ?", nickName).Update("icon", url).Error
 }
+
+func (dao *UserDao) IsExistByNickName(name string) bool {
+	var count int64
+	if dao.db.Model(&model.User{}).Where("nick_name = ?", name).Count(&count); count == 1 {
+		return true
+	}
+	return false
+}
+
+func (dao *UserDao) UpdateNickName(name string, newName string) error {
+	return dao.db.Model(&model.User{}).Where("nick_name = ?", name).Update("nick_name", newName).Error
+}

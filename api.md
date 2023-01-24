@@ -178,15 +178,16 @@
 
 ## 修改密码
 
-**接口：** ``user/password``
+**接口：** ``user/password/:nickName``
 
 **请求方式：** ``PATCH``
 
 **请求参数：**
 
+请求头中需携带token
+
 | 参数名      | 类型     | 备注  |
 |----------|--------|-----|
-| nickName | string | 昵称  |
 | email    | string | 邮箱  |
 | password | int    | 新密码 |
 
@@ -225,17 +226,13 @@
 
 ## 退出账号
 
-**接口：** ``user/logout``
+**接口：** ``user/logout/:nickName``
 
 **请求方式：** ``POST``
 
 **请求参数：**
 
-| 参数名      | 类型     | 备注   |
-|----------|--------|------|
-| nickName | string | 昵称   |
-| token    | string | 身份验证 |
-
+请求头中需携带token
 
 
 **成功：**
@@ -254,7 +251,7 @@
 ## 上传头像
 
 
-**接口：** ``user/icon``
+**接口：** ``user/icon/:nickName``
 
 **请求方式：** ``POST``
 
@@ -262,8 +259,6 @@
 
 | 参数名      | 类型     | 备注                                                             |
 |----------|--------|----------------------------------------------------------------|
-| nickName | string | 昵称                                                             |
-| token    | string | 身份验证                                                           |
 | iconFile | File   | 图片文件 <br/>1. 仅支持png、gif、jpeg、jpg、bmp类型的图片文件 <br/>2.图片大小必须小于2MB |
 
 
@@ -301,16 +296,13 @@
 
 ## 获取自己信息
 
-**接口：** ``userInfo/me``
+**接口：** ``userInfo/me:/nickName``
 
 **请求方式：** ``GET``
 
 **请求参数：**
 
-| 参数名      | 类型     | 备注   |
-|----------|--------|------|
-| nickName | string | 昵称   |
-| token    | string | 身份验证 |
+请求头中需携带token
 
 
 **成功：**
@@ -352,16 +344,16 @@
 
 ## 编辑个人信息
 
-**接口：**  ``userInfo/edit/sex`` 、``userInfo/edit/address``、``userInfo/edit/introduction``
+**接口：**  ``userInfo/edit/sex/:nickName`` 、``userInfo/edit/address/:nickName``、``userInfo/edit/introduction/:nickName``
 
 **请求方式：** ``PATCH``
 
 **请求参数：**
 
+请求头中需携带token
+
 | 参数名                      | 类型     | 备注       |
 |--------------------------|--------|----------|
-| nickName                 | string | 昵称       |
-| token                    | string | 身份验证     |
 | sex/address/introduction | string | 要编辑的个人信息 |
 
 **成功：**

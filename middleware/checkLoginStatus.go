@@ -13,8 +13,8 @@ func CheckLoginStatus() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		redisClient := conf.NewRedisClient()
 		//获取token和nickName
-		token := ctx.PostForm("token")
-		nickName := ctx.PostForm("nickName")
+		token := ctx.GetHeader("token")
+		nickName := ctx.Param("nickName")
 		if token == "" || nickName == "" {
 			//用户未登录
 			ctx.Abort()

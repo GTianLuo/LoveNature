@@ -53,9 +53,9 @@ func (s *UserInfoService) UpdateIntroduction(ctx *gin.Context) *dto.Result {
 	return dto.Success(e.Success, "修改成功")
 }
 
-func (s *UserInfoService) GetMeInfo(ctx *gin.Context) *dto.Result {
+func (s *UserInfoService) GetMeInfo(ctx *gin.Context, nickName, token string) *dto.Result {
 	userInfoDao := dao.NewUserInfoDao(ctx)
-	userInfo, err := userInfoDao.GetMeInfo(s.NickName)
+	userInfo, err := userInfoDao.GetMeInfo(nickName)
 	if err != nil {
 		return dto.Fail(e.Error, err)
 	}

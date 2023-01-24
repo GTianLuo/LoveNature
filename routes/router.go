@@ -18,18 +18,19 @@ func NewRouter() *gin.Engine {
 			userGroup.POST("/login/code", v1.LoginByCode)
 			userGroup.POST("/login/password", v1.LoginByPassword)
 
-			userGroup.POST("/logout", middleware.CheckLoginStatus(), v1.Logout)
-			userGroup.PATCH("/password", middleware.CheckLoginStatus(), v1.UpdatePassword)
+			userGroup.POST("/logout/:nickName", middleware.CheckLoginStatus(), v1.Logout)
+			userGroup.PATCH("/password/:nickName", middleware.CheckLoginStatus(), v1.UpdatePassword)
+			userGroup.PATCH("/edit/nickName/:nickName", middleware.CheckLoginStatus(), v1.UpdateNickName)
 			//userGroup.GET("/me")
-			userGroup.POST("/icon", middleware.CheckLoginStatus(), v1.UploadIcon)
+			userGroup.POST("/icon/:nickName", middleware.CheckLoginStatus(), v1.UploadIcon)
 		}
 
 		userInfoGroup := v1Group.Group("/userInfo", middleware.CheckLoginStatus())
 		{
-			userInfoGroup.GET("/me", v1.GetMeInfo)
-			userInfoGroup.PATCH("/edit/sex", v1.UpdateSex)
-			userInfoGroup.PATCH("/edit/address", v1.UpdateAddress)
-			userInfoGroup.PATCH("/edit/introduction", v1.UpdateIntroduction)
+			userInfoGroup.GET("/me/:nickName", v1.GetMeInfo)
+			userInfoGroup.PATCH("/edit/sex/:nickName", v1.UpdateSex)
+			userInfoGroup.PATCH("/edit/address/:nickName", v1.UpdateAddress)
+			userInfoGroup.PATCH("/edit/introduction/:nickName", v1.UpdateIntroduction)
 		}
 	}
 	return r

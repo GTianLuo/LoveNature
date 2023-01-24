@@ -21,6 +21,8 @@ func init() {
 	msg[NilAddress] = "地址不能为空"
 	msg[InvalidSex] = "非法的性别信息"
 	msg[IntroductionIsTooLong] = "个性签名太长"
+	msg[NilNickName] = "昵称不能为空"
+	msg[NickNameAlreadyExist] = "改昵称已经存在"
 }
 
 func GetMsg(code int) string {

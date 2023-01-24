@@ -203,3 +203,29 @@ func (s *UserService) UploadIcon(ctx *gin.Context) *dto.Result {
 	//ctx
 	return dto.Success(e.Success, url)
 }
+
+func (s *UserService) UpdateNickName(ctx *gin.Context, newNickName string) *dto.Result {
+	redisClient := conf.NewRedisClient()
+	userDao := dao.NewUserDao(ctx)
+	//判断昵称是否合法
+	if newNickName == "" {
+		return dto.Fail(e.NilNickName, nil)
+	}
+	if newNickName == s.NickName {
+		return dto.Success(e.Success, "修改成功")
+	}
+	//检查昵称是否已存在
+	if userDao.IsExistByNickName(newNickName) {
+		return dto.Fail(e.NickNameAlreadyExist, nil)
+	}
+	//修改昵称
+	//修改redis中的昵称
+	redisClient.HSet(e.UserLoginInfo+s.NickName, "NickName", newNickName)
+	//重命名key
+	redisClient.Rename(e.UserLoginInfo+s.NickName, e.UserLoginInfo+newNickName)
+	//修改mysql
+	if err := userDao.UpdateNickName(s.NickName, newNickName); err != nil {
+		return dto.Fail(e.Error, err)
+	}
+	return dto.Success(e.Success, "修改成功")
+}

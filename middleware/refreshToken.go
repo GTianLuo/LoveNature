@@ -9,7 +9,7 @@ import (
 func RefreshToken() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		nickName := ctx.GetHeader("nickName")
+		nickName := ctx.Query("nickName")
 		if token == "" || nickName == "" {
 			return
 		}
