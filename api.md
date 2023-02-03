@@ -389,7 +389,7 @@
 
 
 ### 为动植物添加图片
-**接口：**  ``pet/admin/petInfo``
+**接口：**  ``pet/admin/petInfoPic``
 
 **请求方式：** ``POST``
 
