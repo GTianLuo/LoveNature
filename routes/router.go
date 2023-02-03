@@ -32,6 +32,13 @@ func NewRouter() *gin.Engine {
 			userInfoGroup.PATCH("/edit/address/:nickName", v1.UpdateAddress)
 			userInfoGroup.PATCH("/edit/introduction/:nickName", v1.UpdateIntroduction)
 		}
+
+		petGroup := v1Group.Group("/pet")
+		{
+			petGroup.POST("admin/petInfo", v1.PostPetInfo)
+			petGroup.POST("admin/petInfoPic", v1.PostPetInfoPic)
+			petGroup.GET("/petInfo/keywordList/:keyword", v1.SearchByKeyword)
+		}
 	}
 	return r
 }

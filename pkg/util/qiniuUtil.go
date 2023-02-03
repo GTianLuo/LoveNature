@@ -27,7 +27,7 @@ func UploadImg(file multipart.File, fileSize int64) (string, error) {
 	accessKey := conf.C.QiNiu.AccessKey
 	secretKey := conf.C.QiNiu.SecretKey
 	bucket := conf.C.QiNiu.Bucket
-	qiNiuServer := conf.C.QiNiu.QiNiuServer
+	//qiNiuServer := conf.C.QiNiu.QiNiuServer
 	//鉴权
 	mac := qbox.NewMac(accessKey, secretKey)
 	putPolicy := storage.PutPolicy{
@@ -38,7 +38,7 @@ func UploadImg(file multipart.File, fileSize int64) (string, error) {
 	uploadToken := putPolicy.UploadToken(mac)
 	// 上传Config对象
 	cfg := storage.Config{
-		Zone:          &storage.ZoneHuadongZheJiang2,
+		Zone:          &storage.ZoneHuadong,
 		UseHTTPS:      false,
 		UseCdnDomains: false,
 	}
@@ -50,7 +50,7 @@ func UploadImg(file multipart.File, fileSize int64) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return qiNiuServer + ret.Key, nil
+	return ret.Key, nil
 }
 
 func DelImg(url string) error {

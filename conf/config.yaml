@@ -14,5 +14,5 @@ redis:
 qiniu:
   accessKey: pUMAM6_IIbXvubZnobQOUo876hc8ezuCrM8md5ML
   secretKey: dQKMJAtWHjPO22WbFQEjzh8ifrslnY2DNMblLjfK
-  bucket: love--nature
-  qiNiuServer: http://rnyrwpase.bkt.clouddn.com/
+  bucket: love---nature
+  qiNiuServer: http://rphxbyqwg.hd-bkt.clouddn.com

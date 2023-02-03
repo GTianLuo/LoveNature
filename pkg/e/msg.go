@@ -23,6 +23,8 @@ func init() {
 	msg[IntroductionIsTooLong] = "个性签名太长"
 	msg[NilNickName] = "昵称不能为空"
 	msg[NickNameAlreadyExist] = "改昵称已经存在"
+
+	msg[NotFoundInformation] = "找不到包含所有搜索字词的结果"
 }
 
 func GetMsg(code int) string {

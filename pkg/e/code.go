@@ -20,4 +20,6 @@ const (
 	NilAddress            = 20001
 	InvalidSex            = 20002
 	IntroductionIsTooLong = 20003
+
+	NotFoundInformation = 30001
 )
