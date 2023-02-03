@@ -6,15 +6,17 @@ type Result struct {
 	Data interface{} `json:"data"`
 	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
-	Err  error       `json:"err"`
 }
 
 func Fail(code int, err error) *Result {
-	return &Result{
+	result := &Result{
 		Code: code,
 		Msg:  e.GetMsg(code),
-		Data: err,
 	}
+	if err != nil {
+		result.Data = err.Error()
+	}
+	return result
 }
 
 func Success(code int, data interface{}) *Result {

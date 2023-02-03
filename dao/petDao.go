@@ -49,3 +49,9 @@ func (dao *PetDao) SearchByKeyword(keyword string) ([]model.Pet, error) {
 	err := dao.db.Select("p_name", "p_img").Where("POSITION(? IN `keyword`)", keyword).Find(&pets).Error
 	return pets, err
 }
+
+func (dao *PetDao) GetPetInfoByName(name string) (*model.Pet, error) {
+	var pet model.Pet
+	err := dao.db.Where("p_name = ?", name).Find(&pet).Error
+	return &pet, err
+}

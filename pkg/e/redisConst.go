@@ -8,4 +8,7 @@ const (
 
 	UserLoginInfo    = "lovenature:user:token:"
 	UserLoginInfoTTL = time.Hour * 24 * 30
+
+	PetHotData    = "lovenature:hotData:pet:"
+	PetHotDataDDL = time.Second * 60
 )

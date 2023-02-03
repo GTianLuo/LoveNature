@@ -404,3 +404,69 @@
 
 ## 关键字搜索
 
+**接口：**  ``pet/keywordList/:keyword``
+
+**请求方式：** ``GET``
+
+**返回结果：**
+
+例：搜索关键字金
+
+```json
+{
+    "data": [
+        {
+            "name": "金毛犬",
+            "image": "FpyLSe5w6VkQNWO25QPmg_yMZCn1"
+        },
+        {
+            "name": "金银花",
+            "image": "FhPnuEiV82DO13C5Qm9jrrLk1rm2"
+        }
+    ],
+    "code": 200,
+    "msg": "ok",
+    "err": null
+}
+```
+
+搜索不存在的关键字：
+
+```json
+{
+    "data": null,
+    "code": 30001,
+    "msg": "找不到包含所有搜索字词的结果",
+    "err": null
+}
+```
+
+
+## 获取某一个动植物的详细信息
+
+**接口：**  ``pet/petInfo/:name``
+
+**请求方式：** ``GET``
+
+
+**返回结果：**
+```json
+{
+    "data": {
+        "name": "金毛犬",
+        "image": "FpyLSe5w6VkQNWO25QPmg_yMZCn1",
+        "picture": "[\"FukDY-e0g61JVXZeb-acFM7zbyyt\",\"FpyLSe5w6VkQNWO25QPmg_yMZCn1\",\"FgwFw_OSxhniYKThmehKr2I5MEos\",\"FsA8PmFyEQ0KloaxqXqNlWEmrp4C\"]",
+        "introduction": "金毛寻回犬（Golden Retriever）是单猎犬，比较流行的狗的品种。在猎捕野禽的寻回犬中培养出来的，游泳的续航力极佳。\n金毛寻回犬是最常见的家犬之一，它很容易养，有耐心并且对主人要求不多，只要定期运动，饲喂食物和兽医体检就可以了。它属于匀称、有力、活泼的一个犬种，特征是稳固、身体各部位配合合理，腿既不太长也不笨拙，表情友善，个性热情、机警、自信而且不怕生，性格讨人喜欢。金毛寻回犬最早是一种寻回猎犬，大多作为导盲犬与宠物狗。对小孩子或者婴儿十分友善。金毛寻回犬是位列世界犬种智商排行的第四名。"
+    },
+    "code": 200,
+    "msg": "ok"
+}
+```
+
+```json
+{
+    "data": null,
+    "code": 30001,
+    "msg": "找不到包含所有搜索字词的结果"
+}
+```

@@ -37,7 +37,8 @@ func NewRouter() *gin.Engine {
 		{
 			petGroup.POST("admin/petInfo", v1.PostPetInfo)
 			petGroup.POST("admin/petInfoPic", v1.PostPetInfoPic)
-			petGroup.GET("/petInfo/keywordList/:keyword", v1.SearchByKeyword)
+			petGroup.GET("keywordList/:keyword", v1.SearchByKeyword)
+			petGroup.GET("petInfo/:name", v1.GetPetInfo)
 		}
 	}
 	return r

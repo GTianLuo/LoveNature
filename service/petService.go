@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"lovenature/conf"
 	"lovenature/dao"
 	"lovenature/dto"
 	"lovenature/model"
@@ -67,9 +68,39 @@ func (s *PetService) SearchByKeyWord(ctx *gin.Context, keyword string) *dto.Resu
 	if err != nil {
 		return dto.Fail(e.Error, nil)
 	}
-	petDaos := dto.BuildPetDaoList(pets)
+	petDaos := *dto.BuildPetDtoList(pets)
 	if len(petDaos) == 0 {
 		return dto.Fail(e.NotFoundInformation, nil)
 	}
 	return dto.Success(e.Success, petDaos)
+}
+
+func (s *PetService) GetPetInfo(ctx *gin.Context, name string) *dto.Result {
+	petDao := dao.NewPetDao(ctx)
+	redisClient := conf.NewRedisClient()
+	//先从redis中查找
+	if redisClient.Exists(e.PetHotData+name).Val() > 0 {
+		//刷新过期时间
+		redisClient.Expire(e.PetHotData+name, e.PetHotDataDDL)
+		if petDtoMap, err := redisClient.HGetAll(e.PetHotData + name).Result(); err != nil {
+			return dto.Fail(e.Error, err)
+		} else {
+			var petDto dto.PetDto
+			util.MapToStruct(petDtoMap, &petDto)
+			return dto.Success(e.Success, petDto)
+		}
+	}
+	//redis中查到数据，刷新过期时间
+	//未查到数据，则查询mysql
+	pet, err := petDao.GetPetInfoByName(name)
+	if err != nil {
+		return dto.Fail(e.Error, err)
+	} else if pet.Name == "" {
+		return dto.Fail(e.NotFoundInformation, nil)
+	}
+	petDto := dto.BuildPetDto(pet)
+	//将数据保存到redis
+	redisClient.HMSet(e.PetHotData+name, util.StructToMap(petDto))
+	redisClient.Expire(e.PetHotData+name, e.PetHotDataDDL)
+	return dto.Success(e.Success, petDto)
 }

@@ -37,3 +37,13 @@ func SearchByKeyword(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, dto.Fail(e.InvalidParam, nil))
 	}
 }
+
+func GetPetInfo(ctx *gin.Context) {
+	petService := service.NewPetService()
+	name := ctx.Param("name")
+	if name != "" {
+		ctx.JSON(http.StatusOK, petService.GetPetInfo(ctx, name))
+	} else {
+		ctx.JSON(http.StatusBadRequest, dto.Fail(e.InvalidParam, nil))
+	}
+}
