@@ -17,6 +17,7 @@ func init() {
 	msg[UserNotLogin] = "用户未登录"
 	msg[IconTooBig] = "只允许2MB以下的图片作为头像"
 	msg[WrongPictureFormat] = "不支持该格式的图片"
+	msg[AccountNotRegistered] = "账号未注册"
 
 	msg[NilAddress] = "地址不能为空"
 	msg[InvalidSex] = "非法的性别信息"
@@ -25,6 +26,9 @@ func init() {
 	msg[NickNameAlreadyExist] = "改昵称已经存在"
 
 	msg[NotFoundInformation] = "找不到包含所有搜索字词的结果"
+
+	msg[IllegalUpLoadBlog] = "非法上传文章"
+	msg[NoMoreBlogs] = "没有更多的文章"
 }
 
 func GetMsg(code int) string {

@@ -166,6 +166,7 @@ func (s *UserService) UploadIcon(ctx *gin.Context) *dto.Result {
 	userDao := dao.NewUserDao(ctx)
 	redisClient := conf.NewRedisClient()
 	iconFile, header, err := ctx.Request.FormFile("iconFile")
+	defer iconFile.Close()
 	if err != nil {
 		return dto.Fail(e.InvalidParam, err)
 	}
@@ -182,7 +183,7 @@ func (s *UserService) UploadIcon(ctx *gin.Context) *dto.Result {
 	}
 	//若原先头像不是默认头像的话删除头像
 	userI, _ := ctx.Get("user")
-	if icon := userI.(*dto.UserDto).Icon; icon != "http://rnyrwpase.bkt.clouddn.com/default.jpg" {
+	if icon := userI.(*dto.UserDto).Icon; icon != "default.jpg" {
 		if err := util.DelImg(icon); err != nil {
 			return dto.Fail(e.Error, err)
 		}

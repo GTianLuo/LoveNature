@@ -57,15 +57,14 @@ func DelImg(url string) error {
 	accessKey := conf.C.QiNiu.AccessKey
 	secretKey := conf.C.QiNiu.SecretKey
 	bucket := conf.C.QiNiu.Bucket
-	qiNiuServer := conf.C.QiNiu.QiNiuServer
 	//鉴权
 	mac := qbox.NewMac(accessKey, secretKey)
 	//配置属性
 	cfg := storage.Config{
 		UseHTTPS: false,
-		Zone:     &storage.ZoneHuadongZheJiang2,
+		Zone:     &storage.ZoneHuadong,
 	}
 	bucketManager := storage.NewBucketManager(mac, &cfg)
 	//从url中解析出key并删除
-	return bucketManager.Delete(bucket, url[len(qiNiuServer):])
+	return bucketManager.Delete(bucket, url)
 }

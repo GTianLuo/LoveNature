@@ -8,14 +8,13 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"lovenature/model"
 )
 
 var (
 	_db *gorm.DB
 )
 
-func Database(connRead, connWrite string) {
+func database(connRead, connWrite string) {
 	var ormLogger logger.Interface
 	if gin.Mode() == "debug" {
 		ormLogger = logger.Default.LogMode(logger.Info)
@@ -49,9 +48,9 @@ func NewDBClient(ctx context.Context) *gorm.DB {
 
 func Migration() {
 	err := _db.Set("gorm:table_options", "charset=utf8mb4").AutoMigrate(
-		&model.User{},
-		&model.UserInfo{},
-		&model.Pet{},
+	//&model.User{},
+	//&model.UserInfo{},
+	//&model.Pet{},
 	)
 	if err != nil {
 		panic(fmt.Sprintf("dataBase create failed:%s", err.Error()))

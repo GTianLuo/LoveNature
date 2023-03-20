@@ -9,7 +9,7 @@ var (
 	redisClient *redis.Client
 )
 
-func Cache(addr, password string, db int) {
+func cache(addr, password string, db int) {
 	rc := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,

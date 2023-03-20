@@ -31,6 +31,12 @@ type Config struct {
 		Bucket      string `yaml:"bucket"`
 		QiNiuServer string `yaml:"qiNiuServer"`
 	}
+
+	Es struct {
+		Url      string `yaml:"url"`
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
+	}
 }
 
 func init() {
@@ -49,8 +55,11 @@ func init() {
 	//配置mysql
 	readPath := strings.Join([]string{C.Mysql.DBUser, ":", C.Mysql.DBPassWord, "@tcp(", C.Mysql.DBHost, ":", C.Mysql.DBPort, ")/", C.Mysql.DBName, "?charset=utf8&parseTime=true"}, "")
 	writePath := strings.Join([]string{C.Mysql.DBUser, ":", C.Mysql.DBPassWord, "@tcp(", C.Mysql.DBHost, ":", C.Mysql.DBPort, ")/", C.Mysql.DBName, "?charset=utf8&parseTime=true"}, "")
-	Database(readPath, writePath)
+	database(readPath, writePath)
 
 	//配置Redis
-	Cache(C.Redis.Addr, C.Redis.Password, C.Redis.DB)
+	cache(C.Redis.Addr, C.Redis.Password, C.Redis.DB)
+
+	//配置Es
+	es(C.Es.Url)
 }

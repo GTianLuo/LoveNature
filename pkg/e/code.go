@@ -16,10 +16,14 @@ const (
 	WrongPictureFormat     = 10009
 	NilNickName            = 10010
 	NickNameAlreadyExist   = 10011
+	AccountNotRegistered   = 10012
 
 	NilAddress            = 20001
 	InvalidSex            = 20002
 	IntroductionIsTooLong = 20003
 
 	NotFoundInformation = 30001
+
+	IllegalUpLoadBlog = 40001
+	NoMoreBlogs       = 40002
 )

@@ -7,7 +7,7 @@ type Pet struct {
 	Name         string `gorm:"column:p_name;unique"`
 	Image        string `gorm:"column:p_img"`
 	Picture      string `gorm:"type:text;column:p_picture"`
-	Introduction string `gorm:"column:p_intro"`
+	Introduction string `gorm:"type:text;column:p_intro"`
 	KeyWord      string `gorm:"column:keyword;index"`
 }
 

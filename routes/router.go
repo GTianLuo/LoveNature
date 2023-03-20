@@ -16,10 +16,13 @@ func NewRouter() *gin.Engine {
 			userGroup.POST("/code", v1.SendCode)
 			userGroup.POST("/register", v1.Register)
 			userGroup.POST("/login/code", v1.LoginByCode)
+
 			userGroup.POST("/login/password", v1.LoginByPassword)
 
 			userGroup.POST("/logout/:nickName", middleware.CheckLoginStatus(), v1.Logout)
+
 			userGroup.PATCH("/password/:nickName", middleware.CheckLoginStatus(), v1.UpdatePassword)
+
 			userGroup.PATCH("/edit/nickName/:nickName", middleware.CheckLoginStatus(), v1.UpdateNickName)
 			//userGroup.GET("/me")
 			userGroup.POST("/icon/:nickName", middleware.CheckLoginStatus(), v1.UploadIcon)
@@ -39,6 +42,13 @@ func NewRouter() *gin.Engine {
 			petGroup.POST("admin/petInfoPic", v1.PostPetInfoPic)
 			petGroup.GET("keywordList/:keyword", v1.SearchByKeyword)
 			petGroup.GET("petInfo/:name", v1.GetPetInfo)
+		}
+
+		blogGroup := v1Group.Group("/blog", middleware.RefreshToken())
+		{
+			blogGroup.POST("/content/:nickName", middleware.CheckLoginStatus(), v1.PostBlog)
+			blogGroup.GET("/content/:keyword", v1.SearchBlog)
+			blogGroup.GET("/content/list/:way/:page", v1.GetBlogsList)
 		}
 	}
 	return r
