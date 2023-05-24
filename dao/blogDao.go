@@ -29,8 +29,7 @@ func (dao *BlogDao) UploadBlogPictures(id string, urls []string) error {
 	return err
 }
 
-/*
-func (dao *BlogDao) SearchByKeyWord(keyword string) {
+func (dao *BlogDao) SearchByKeyWord(keyword string, page int) (err error, blogs []*model.Blog, highlights []string) {
 	blogTitleHighlight := elastic.NewHighlighterField("blogTitle")
 	contentHighlight := elastic.NewHighlighterField("content")
 	contentHighlight.FragmentSize(5)
@@ -39,8 +38,35 @@ func (dao *BlogDao) SearchByKeyWord(keyword string) {
 	contentHighlight.PreTags("<b>")
 	contentHighlight.PostTags("</b>")
 	highlight := elastic.NewHighlight().Fields(blogTitleHighlight, contentHighlight)
-	dao.es.Search()
-}*/
+	boolQuery := elastic.NewBoolQuery().
+		Should(elastic.NewQueryStringQuery("blogTitle:"+keyword), elastic.NewQueryStringQuery("content:"+keyword))
+	var result *elastic.SearchResult
+	result, err = dao.es.
+		Search("blog").
+		Highlight(highlight).
+		Size(pageSize).
+		From((page - 1) * pageSize).
+		Size(pageSize).
+		Query(boolQuery).
+		Do(context.TODO())
+	if err != nil {
+		return
+	}
+	for _, hit := range result.Hits.Hits {
+		blog := &model.Blog{}
+		if err = json.Unmarshal([]byte(hit.Source), blog); err != nil {
+			return
+		}
+		blogs = append(blogs, blog)
+		if s := hit.Highlight["blogTitle"]; s != nil {
+			highlights = append(highlights, s[0])
+		} else {
+			highlights = append(highlights, hit.Highlight["content"][0])
+		}
+		highlights = append(highlights)
+	}
+	return
+}
 
 func (dao *BlogDao) GetBlogList(way string, page int) ([]*model.Blog, error) {
 	var blogs []*model.Blog
@@ -59,6 +85,7 @@ func (dao *BlogDao) GetBlogList(way string, page int) ([]*model.Blog, error) {
 		if err := json.Unmarshal([]byte(hit.Source), blog); err != nil {
 			return blogs, err
 		}
+		blog.BlogId = hit.Id
 		blogs = append(blogs, blog)
 	}
 	return blogs, nil

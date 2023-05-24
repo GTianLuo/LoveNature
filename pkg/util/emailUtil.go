@@ -165,7 +165,7 @@ func formatCode(code string) string {
                     <p>此为系统邮件，请勿回复<br>
                         请保管好您的邮箱，避免账号被他人盗用
                     </p>
-                    <p id="sign">——雷静容</p>
+                    <p id="sign">——Find</p>
                 </div>
             </div>
         </td>

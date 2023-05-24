@@ -11,7 +11,7 @@
 
 **协议：** ``HTTP``
 
-**API HOST：** ``love-/api/v1``
+**API HOST：** ``/api/v1``
 
 # 登录注册模块
 
@@ -468,5 +468,123 @@
     "data": null,
     "code": 30001,
     "msg": "找不到包含所有搜索字词的结果"
+}
+```
+
+# 文章模块
+
+##发布文章
+
+**接口:** ``/blog/content/:name``
+
+**请求方式:** ``POST``
+
+**参数**
+1. 请求头带token。
+2. 请求参数
+
+| 参数名       | 类型      | 备注   |
+|-----------|---------|------|
+| blogTitle | string  | 文章标题 |
+| content   | string  | 文章内容 |
+| location  | string  | 位置信息 |
+| pictures  | []files | 图片信息 |
+
+## 获取文章
+
+
+**接口:** ``/blog/content/list/:way/:page``
+
+**请求方式:** ``GET``
+
+**参数**
+1. 未登录用户也能使用的功能，不需要token
+2. 请求路径中参数说明
+- way:排序方式，只能是createdAt或者getLikesNumber按照发布时间或者点赞数的顺序返回文章
+- page: 页码，从1开始
+
+
+**返回结果：**
+
+非法页码
+```json
+{
+    "data": null,
+    "code": 400,
+    "msg": "参数解析异常"
+}
+```
+
+正常结果
+```json
+{
+    "data": [
+        {
+            "createdAt": "2023-03-27T12:37:04.0058303+08:00",
+            "blogId": "wOZaIYcBKE4Hsv7s_ym8",
+            "author": {
+                "email": "2985496688@qq.com",
+                "nickName": "红眼树蛙34069c94c9001",
+                "icon": "default.jpg"
+            },
+            "content": "帽子一戴\n谁都不爱\n这猫咪太可爱啦",
+            "blogTitle": "戴帽子的小猫猫！",
+            "pictures": [
+                "Fk59mHYzNvowHjYFzg-glqTcyqCE",
+                "FsdgyUtBDcfCqFcA9rfQaXrPO4k3",
+                "FuixByrmmaPaNFdiirQ4IZa3j1s2"
+            ],
+            "getLikesNumber": 0,
+            "location": "西安市 长安区"
+        }
+    ],
+    "code": 200,
+    "msg": "ok"
+}
+```
+```json
+{
+    "data": null,
+    "code": 40002,
+    "msg": "没有更多的文章"
+}
+```
+
+
+## 搜索
+**接口:** ``/blog/content/:keyword/:page``
+
+**请求方式:** ``GET``
+
+**参数**
+
+keyword：搜索关键字
+
+**返回结果**
+正常结果:搜索帽子
+```json
+{
+    "data": [
+        {
+            "createdAt": "2023-03-27T12:37:04.0058303+08:00",
+            "author": {
+                "email": "2985496688@qq.com",
+                "nickName": "红眼树蛙34069c94c9001",
+                "icon": "default.jpg"
+            },
+            "content": "帽子一戴\n谁都不爱\n这猫咪太可爱啦",
+            "blogTitle": "戴帽子的小猫猫！",
+            "pictures": [
+                "Fk59mHYzNvowHjYFzg-glqTcyqCE",
+                "FsdgyUtBDcfCqFcA9rfQaXrPO4k3",
+                "FuixByrmmaPaNFdiirQ4IZa3j1s2"
+            ],
+            "getLikesNumber": 0,
+            "location": "西安市 长安区",
+            "highlight": "戴<b>帽</b><b>子</b>的小猫猫！"
+        }
+    ],
+    "code": 200,
+    "msg": "ok"
 }
 ```

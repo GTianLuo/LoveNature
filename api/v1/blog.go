@@ -11,8 +11,8 @@ import (
 
 func PostBlog(ctx *gin.Context) {
 	blogService := service.NewBlogService()
+	blogService.Email = ctx.Keys["user"].(*dto.UserDto).Email
 	if err := ctx.ShouldBind(blogService); err == nil {
-		blogService.Author = ctx.Param("nickName")
 		ctx.JSON(http.StatusOK, blogService.PostBlog(ctx))
 	} else {
 		ctx.JSON(http.StatusBadRequest, dto.Fail(http.StatusBadRequest, err))
@@ -21,9 +21,10 @@ func PostBlog(ctx *gin.Context) {
 
 func SearchBlog(ctx *gin.Context) {
 	keyword := ctx.Param("keyword")
+	page, err := strconv.Atoi(ctx.Param("page"))
 	blogService := service.NewBlogService()
-	if keyword != "" {
-		ctx.JSON(http.StatusOK, blogService.SearchByKeyWord(ctx, keyword))
+	if keyword != "" && err == nil && page > 0 {
+		ctx.JSON(http.StatusOK, blogService.SearchByKeyWord(ctx, keyword, page))
 	} else {
 		ctx.JSON(http.StatusBadRequest, dto.Fail(e.InvalidParam, nil))
 	}
@@ -33,7 +34,7 @@ func GetBlogsList(ctx *gin.Context) {
 	way := ctx.Param("way")
 	page, err := strconv.Atoi(ctx.Param("page"))
 	blogService := service.NewBlogService()
-	if way != "" && err == nil {
+	if way != "" && err == nil && page > 0 {
 		ctx.JSON(http.StatusOK, blogService.GetBlogList(ctx, way, page))
 	} else {
 		ctx.JSON(http.StatusBadRequest, dto.Fail(e.InvalidParam, err))

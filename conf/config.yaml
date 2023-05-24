@@ -3,21 +3,24 @@ mysql:
   dbHost: 101.42.38.110
   dbPort: 3306
   dbUser: root
-  dbPassWord: 111111
-  dbName: love_nature
+  dbPassWord: 2g0t0l374yyds
+  dbName: lovenature
 
 redis:
   addr: 101.42.38.110:6379
-  password: 111111
+  password: 2g0t0l374yyds
   db: 0
 
 qiniu:
-  accessKey: pUMAM6_IIbXvubZnobQOUo876hc8ezuCrM8md5ML
-  secretKey: dQKMJAtWHjPO22WbFQEjzh8ifrslnY2DNMblLjfK
-  bucket: find-1
-  qiNiuServer: http://rqxoyicd6.hd-bkt.clouddn.com/
+  accessKey: 5uc0mMKnZnNJddBFZu25ZstcKLGFVpqWb7puVUm5
+  secretKey: i0o6sRrvsgXDrhrS8z3vy6HHNQhWo1-bceT_i8_o
+  bucket: find-2
+  qiNiuServer: http://rsbdaunui.hd-bkt.clouddn.com/
+
+
+
 
 es:
-  url: http://101.42.38.110:9200
+  url: http://43.136.243.167:9200
   user:
   password:

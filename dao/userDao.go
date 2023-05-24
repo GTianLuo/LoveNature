@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"lovenature/conf"
 	"lovenature/model"
 )
@@ -42,6 +43,13 @@ func (dao *UserDao) CreateUser(user *model.User) error {
 func (dao *UserDao) GetUser(email string) *model.User {
 	u := &model.User{}
 	dao.db.Where("email = ?", email).Find(u)
+	return u
+}
+
+func (dao *UserDao) GetUsers(email []string) []model.User {
+	u := []model.User{}
+	dao.db.Where("email IN ?", email).
+		Clauses(clause.OrderBy{Expression: clause.Expr{SQL: "FIELD(email,?)", Vars: []interface{}{email}, WithoutParentheses: true}}).Find(&u)
 	return u
 }
 

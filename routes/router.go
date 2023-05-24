@@ -47,7 +47,7 @@ func NewRouter() *gin.Engine {
 		blogGroup := v1Group.Group("/blog", middleware.RefreshToken())
 		{
 			blogGroup.POST("/content/:nickName", middleware.CheckLoginStatus(), v1.PostBlog)
-			blogGroup.GET("/content/:keyword", v1.SearchBlog)
+			blogGroup.GET("/content/:keyword/:page", v1.SearchBlog)
 			blogGroup.GET("/content/list/:way/:page", v1.GetBlogsList)
 		}
 	}

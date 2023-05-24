@@ -18,7 +18,7 @@ type BlogService struct {
 	BlogId string `form:"blogId"`
 	//Pictures string `form:"pictures"` // 图片
 	BlogTitle string `form:"blogTitle"`
-	Author    string `form:"author"`
+	Email     string `form:"email"`
 	Content   string `form:"content"`
 	Location  string `form:"location"`
 }
@@ -61,7 +61,7 @@ func (service *BlogService) PostBlog(ctx *gin.Context) *dto.Result {
 	//封装model
 	blog := &model.Blog{
 		CreatedAt:      time.Now(),
-		Author:         service.Author,
+		Email:          service.Email,
 		Location:       service.Location,
 		BlogTitle:      service.BlogTitle,
 		Content:        service.Content,
@@ -76,14 +76,35 @@ func (service *BlogService) PostBlog(ctx *gin.Context) *dto.Result {
 	return dto.Success(e.Success, "发布成功")
 }
 
-func (service *BlogService) SearchByKeyWord(ctx *gin.Context, keyword string) *dto.Result {
+func (service *BlogService) SearchByKeyWord(ctx *gin.Context, keyword string, page int) *dto.Result {
+
+	blogDao := dao.NewBlogDao(ctx)
+	userDao := dao.NewUserDao(ctx)
 	//es中搜索
-	return nil
+	err, blogs, highlights := blogDao.SearchByKeyWord(keyword, page)
+
+	if err != nil {
+		return dto.Fail(e.Error, err)
+	}
+	if len(blogs) == 0 {
+		return dto.Fail(e.NoMoreBlogs, nil)
+	}
+	var emails []string
+	var users []model.User
+	for _, blog := range blogs {
+		emails = append(emails, blog.Email)
+	}
+	for _, email := range emails {
+		users = append(users, *userDao.GetUser(email)) //userDao.GetUser(email)
+	}
+	//mysql查找作者信息
+	userDtos := dto.BuildUserList(users)
+	return dto.Success(e.Success, dto.BuildBlogList(blogs, highlights, userDtos))
 }
 
 func (service *BlogService) GetBlogList(ctx *gin.Context, way string, page int) *dto.Result {
-	//es中搜索
 	blogDao := dao.NewBlogDao(ctx)
+	userDao := dao.NewUserDao(ctx)
 	blogs, err := blogDao.GetBlogList(way, page)
 	if err != nil {
 		return dto.Fail(e.Error, err)
@@ -91,5 +112,14 @@ func (service *BlogService) GetBlogList(ctx *gin.Context, way string, page int) 
 	if len(blogs) == 0 {
 		return dto.Fail(e.NoMoreBlogs, nil)
 	}
-	return dto.Success(e.Success, blogs)
+	var emails []string
+	for _, blog := range blogs {
+		emails = append(emails, blog.Email)
+	}
+	var users []model.User
+	for _, email := range emails {
+		users = append(users, *userDao.GetUser(email)) //userDao.GetUser(email)
+	}
+	userDtos := dto.BuildUserList(users)
+	return dto.Success(e.Success, dto.BuildBlogList(blogs, make([]string, len(blogs)+1), userDtos))
 }
